@@ -33,4 +33,4 @@ Read docs/BLUEPRINT.md for the full agreed product. Preserve PRODUCT.md, DESIGN.
 
 ## Scope and provenance
 
-The transferred background is the JPG supplied by the user. The EPS and original ZIP remain outside this repository; they are not required to run the current interface. Original layered-vector conversion and asset redistribution rights are unverified. No node_modules, built output, credentials or machine-specific runtime settings belong in Git.
+The transferred background is the JPG supplied by the user. Its original EPS is preserved in `references/cave-background-original.eps`; the supplied component reference and participant briefing are also in `references/`. These inputs are not required to run the current interface. The original ZIP's two contents are both preserved without duplicating the ZIP. Original layered-vector conversion and asset redistribution rights are unverified. No node_modules, built output, credentials or machine-specific runtime settings belong in Git.

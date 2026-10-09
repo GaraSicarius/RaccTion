@@ -47,6 +47,7 @@ The production build is in `dist/`. It must be served over HTTP; opening `index.
 - `docs/BLUEPRINT.md`: complete product blueprint, included in the repository.
 - `HANDOFF.md`: completed work, pending integrations and steps to resume elsewhere.
 - `docs/images/`: desktop and compact-layout reference captures.
+- `references/`: original EPS artwork, supplied component text, and participant briefing for continuation on another computer.
 
 The file location `src/components/ui` is resolved by the `@/` alias; it is the component directory for this project. A filesystem-root `/components/ui` directory is not required. No additional shadcn initialization is needed for this setup.
 
