@@ -2,22 +2,22 @@
 <!-- impeccable:product-schema 1 -->
 
 ## Platform
-web
+Chrome extension (Manifest V3). Runs on Chromium browsers; Gemini Nano inference requires Chrome 138+ on supported hardware, keyword-only mode works everywhere else tested (Edge, Opera GX).
 
 ## Stack
-React, TypeScript, Tailwind and Framer Motion as requested for the supplied component. Separate Vite project; current delivery is a responsive interface preview for the planned Chrome extension.
+React 19 + TypeScript + Vite, Tailwind CSS 4 tokens, Framer Motion (adapted supplied Alert), lucide-react. Three extension pages (popup / overlay / admin), an MV3 module service worker, and a standalone IIFE content script. Gemini Nano via the built-in Prompt API (`LanguageModel`), schema-constrained JSON output, every quote verified against the captured text.
 
 ## Users and purpose
-People arriving on promotional websites who want to understand conditions before claiming an offer. Explain costs, dates, eligibility and required steps with evidence, then separately approve navigation and filling.
+People arriving on promotional websites who want to understand conditions before claiming an offer. RaccTion reads the active page on demand and answers: what will they ask for, how much effort it takes, and what looks risky — with page-backed quotes.
 
 ## Constraints
-Use the approved docs/BLUEPRINT.md. This build uses explicitly labeled synthetic offers, not live AI output. No cloud inference, page scanning or merchant submissions in the preview. Profile details stay in memory. Saved sample reviews and display preferences may persist locally.
+All processing is local; nothing is uploaded and no cloud API is used. AI findings without a matching quote are labeled "AI inferred". Demo coverage uses four labeled synthetic pages; real-page breadth is still being validated. `minimum_chrome_version` is 120 for Opera/Edge compatibility — Nano degrades to keyword mode where unsupported.
 
 ## Brand commitments
-User chose RaccTion, raccoon identity, supplied mountain/cave artwork, subtle parallax, readable findings, and reduced-motion support. Charcoal, gray, cream; semantic red/amber/green reserved for review status.
+RaccTion name and raccoon identity, user-supplied cave artwork on the Admin hero, cream paper `#f6f1e5` / forest `#263d31` palette, DM Sans + Fraunces, square corners, reduced-motion support, semantic red/amber/green only for findings and trust.
 
 ## Evidence
-User-provided background ZIP contains EPS and JPG, not separate transparent layers. User-pasted alert code is the component reference. Asset license/original component URL is not supplied.
+Users act on: the "What they'll ask for" chips, Effort and Trust meters, costs, free-plan answer, steps and red flags. Trust shows "Signals, not a guarantee" and explains trusted/blocked-domain overrides.
 
 ## Accessibility
-Keyboard-operable controls, readable contrast, visible focus, explicit status text, reduced-motion support and responsive compact layouts.
+Keyboard-operable controls, labeled inputs, visible focus, ≥12 px text, ≥40 px targets, status text next to every color cue, `prefers-reduced-motion` honored in the scan sweep and transitions.

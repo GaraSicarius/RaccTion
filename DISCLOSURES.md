@@ -1,40 +1,40 @@
-# RaccTion prototype disclosures
+# RaccTion disclosures
 
 ## Models and inference
 
-No runtime AI model is connected. Prepared, original synthetic scenarios drive the interface. Gemini Nano through Chrome's Prompt API remains the planned local model, not an implemented dependency.
+- **Gemini Nano**, via Chrome's built-in **Prompt API** (`globalThis.LanguageModel`), runs entirely on the device. The model is downloaded and managed by Chrome — it is not bundled with the extension — and the exact model version can be inspected at `chrome://on-device-internals`.
+- Output is constrained to a small JSON schema (`responseConstraint`) and treated as data only; every AI quote is validated against the captured page text before it earns a "Required" label or a trust point.
+- When the Prompt API is missing or the model isn't available, RaccTion runs in **keyword-only mode** and says so on the card.
+- **Real-inference verification on the demo machine: pending.**
 
-## Technologies and frameworks actually included
+## Technologies and frameworks
 
-React, TypeScript, Vite, Tailwind CSS, Framer Motion, lucide-react, clsx, and tailwind-merge. Versions are recorded in package-lock.json. Native browser APIs provide local storage, dialogs, media preference handling and scrolling. No backend or cloud database.
+From `package.json` at submission time:
 
-## Network and APIs
+- React 19 / ReactDOM 19, Vite 8, TypeScript 5.9, Tailwind CSS 4 (@tailwindcss/vite), Framer Motion 12, lucide-react 1.53, clsx 2, tailwind-merge 3, @fontsource DM Sans 5 / Fraunces 5, @types/chrome 0.3, @types/node 22.
+- Chrome Extension APIs: `scripting` (on-demand injection), `storage` (settings/history in `storage.local`, live scan state in `storage.session`), `action` (badge), `runtime` (messages, options page), `tabs` (capture/highlight messaging).
+- Web platform: CSS Custom Highlight API (`::highlight(racction-hit)` + `CSS.highlights`) for "Show on page"; Web Crypto PBKDF2-SHA256 (150,000 iterations, 16-byte salt) for the optional Admin PIN; `structuredClone`, `AbortController` timeouts, `promptStreaming`.
 
-Development downloads dependencies from npm. The running preview loads its scripts, fonts and artwork from its local server. No cloud inference, analytics, external merchant fetch or submission endpoint is included. Production browser network behavior still needs separate testing before any broader privacy claim.
+## APIs and cloud services
 
-## Assets
+**None.** There is no backend, no analytics, no API key, no account. The only network fetch the extension itself ever triggers is Chrome's one-time Gemini Nano model download. Scanned page content never leaves the device.
 
-- User supplied `mountain-with-entrance-dark-cave-mine-vector-parallax-background-2d-animation-with-cartoon-illustrat (1).zip` with `2111.w026.n002.1128B.p0.1128.eps` and `2111.w026.n002.1128B.p0.1128.jpg`.
-- The JPG is stored as `public/assets/cave-background.jpg` unchanged. Its left artwork region is framed in the interface; the explanatory right panel is excluded from view. Parallax moves the flattened plane, not independent EPS layers.
-- Asset creator, license, attribution requirements and redistribution permission: Insufficient data to verify. User provision alone does not establish redistribution rights. No Unsplash asset was substituted.
-- Raccoon mark: simple SVG logo geometry authored for this prototype. No worldwide trademark or originality clearance is claimed.
-- Fonts: locally bundled DM Sans and Fraunces from @fontsource npm packages. Preserve their package license files when distributing fonts.
-- UI icons: lucide-react. Preserve applicable dependency license notices.
+## Existing code and assets
 
-## Supplied components
-
-The user supplied a Framer Motion Alert implementation and an attached alternate alert/button reference. The inline Framer Motion alert was integrated into `src/components/ui/alert.tsx`, adapted for the RaccTion palette, reduced motion, semantic live regions and optional native-button actions. Decorative hover tilt was removed. The attached expanded component system was not copied wholesale.
-
-The original 21st catalog URL, author and component-specific license were not supplied. These remain unverified. No component retrieval from a paid 21st service or hosted 21st AI generation was performed.
+- The **RaccTion interface preview** was built earlier on 9 October 2026 during the same hackathon: design tokens, the raccoon SVG mark, and the Alert component (adapted from a user-supplied Framer Motion component whose original source URL and license remain unverified).
+- `public/art/cave-background.jpg` — user-supplied artwork (source ZIP with EPS/JPG; creator/license/attribution rights unverified). Used on the Admin page hero.
+- `public/icons/icon-*.png` — rendered from the raccoon SVG on a forest tile for this project.
+- `demo-pages/` — synthetic promo pages written for this project; each is labeled "Synthetic demo page for RaccTion — not a real offer".
+- `references/` — original supplied files (EPS artwork, briefing PDF, supplied component text) kept for provenance; not shipped in `dist/`.
 
 ## AI development tools
 
-OpenAI Codex assisted implementation, original fixture authoring and verification. Impeccable supplied design guidance and review; the installed 21st CLI skill guided component integration. Native Codex agents implemented bounded components/data and reviewed the interface. These development tools are separate from product inference.
+- **Devin (Cognition)** — planning, implementation, and testing of the Chrome extension (this delivery).
+- The earlier interface preview used **OpenAI Codex** with **Impeccable** design guidance and an installed 21st CLI skill for component integration. These tools are separate from product inference; no paid 21st asset was retrieved.
 
 ## User data
 
-Display priority and sample IDs/save times persist in localStorage. Optional profile values remain in memory and clear on reload/close. The demonstration form uses values only after approval. No passwords, payment details or OTP fields are provided. No submitted account or merchant transaction is created by Finish demo.
-
-## Delivery limitations
-
-This is a working UI preview, not the completed promotion-analysis extension. Update this record after real inference, capture, extension packaging and autofill are implemented and tested.
+- Settings and scan history live in `chrome.storage.local` on the device; in-flight scan state lives in `chrome.storage.session`.
+- The optional Admin PIN is stored only as a salted PBKDF2 hash (`adminPin`) — the export never contains it — and the unlock flag lives in session storage until the browser restarts.
+- The **autofill profile** (all-optional name/email/mobile/address/postal/birthdate) lives in `chrome.storage.session` key `profile` and is cleared when the browser closes. With an Admin PIN, an optional "Remember on this device" copy is stored as `profileEnc` — AES-GCM-256, key derived via PBKDF2-SHA256 (150,000 iterations, separate salt), random IV. Profile values never enter prompts, scan results, history, exports, badge text or logs, and are never sent anywhere except into the page fields the user explicitly approves. Passwords, card/OTP/PIN, bank/ID numbers, uploads and consent checkboxes are never stored or filled, and RaccTion never submits forms.
+- Export (`racction-export-*.json`) contains settings + history only — never `profile` or `profileEnc`.

@@ -5,7 +5,7 @@
     "strict": true, "noEmit": true, "skipLibCheck": true,
     "allowImportingTsExtensions": true, "allowJs": true,
     "baseUrl": ".", "paths": { "@/*": ["./src/*"] },
-    "types": ["vite/client"]
+    "types": ["vite/client", "chrome"]
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "vite.config.ts", "vite.content.config.ts"]
 }

@@ -1,0 +1,21 @@
+/* Action popup (~340px). */
+body { width:340px; font-size:14px; }
+
+.pop { display:flex; flex-direction:column; }
+.pop-header { display:flex; align-items:center; gap:10px; padding:12px 16px; background:#263d31; color:#f6f1e5; }
+.pop-header .raccoon { width:34px; height:29px; }
+.pop-header strong { font-size:17px; letter-spacing:-.02em; }
+.pop-header .brand-light { font-weight:400; }
+
+.pop-body { padding:16px; display:grid; gap:12px; }
+.pop-page { display:flex; align-items:center; gap:9px; font-size:13px; color:#4d554b; min-height:24px; }
+.pop-page svg { color:#6a7363; }
+.pop-page strong { font-weight:700; color:#1d211d; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pop-scan { width:100%; min-height:52px; font-size:14px; }
+.pop-admin { width:100%; }
+.pop-blocked { font-size:12px; line-height:1.55; color:#704313; background:#efdfbc; padding:10px 12px; }
+.pop-status { display:flex; align-items:flex-start; gap:8px; font-size:12px; line-height:1.55; color:#5a6358; border-top:1px solid var(--line); padding-top:12px; }
+.pop-status svg { margin-top:1px; flex-shrink:0; }
+.pop-status--ready { color:#395035; }
+.pop-status--warn { color:#704818; }
+.pop-status a { color:#405947; font-weight:700; }

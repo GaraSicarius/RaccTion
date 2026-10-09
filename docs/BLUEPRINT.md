@@ -1,5 +1,7 @@
 # RaccTion — finalized build blueprint
 
+> Superseded in parts by the implemented extension — see README.md.
+
 Status: agreed product direction and proposed implementation, 9 October 2026. This document is a build specification, not evidence that the extension has been implemented or tested. Selected project name: RaccTion. Name, domain, and trademark availability have not been checked.
 
 Implementation update: the user subsequently requested a supplied React component and mountain/cave parallax artwork. A separate React/TypeScript/Tailwind interface preview now exists at `racction/` in this workspace, with Framer Motion alerts and clearly labeled synthetic offers. This supersedes the earlier plain-JavaScript interface choice for the preview. Live AI, merchant-page capture, extension packaging, real autofill and encrypted persistent profiles remain pending. See `racction/README.md` and `racction/DISCLOSURES.md` for actual delivery scope and assets.

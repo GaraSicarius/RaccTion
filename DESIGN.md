@@ -2,11 +2,11 @@
 name: RaccTion
 description: A cream inspection sheet in a charcoal mountain hideaway.
 colors:
-  paper: "#f5f3ed"
-  ink: "#292b29"
-  muted: "#696a61"
-  line: "#deded3"
-  forest: "#374c41"
+  paper: "#f6f1e5"
+  ink: "#1d211d"
+  muted: "#66685f"
+  line: "#d7d0bf"
+  forest: "#263d31"
   charcoal: "#292b31"
   white: "#fff"
   warning-surface: "#ece0c5"
@@ -26,26 +26,26 @@ colors:
 typography:
   display:
     fontFamily: "Fraunces, Georgia, serif"
-    fontSize: "clamp(48px, 5.4vw, 75px)"
+    fontSize: "clamp(54px, 5.3vw, 82px)"
     fontWeight: 500
-    lineHeight: 1.06
-    letterSpacing: "-.045em"
+    lineHeight: 0.96
+    letterSpacing: "-.035em"
   headline:
     fontFamily: "DM Sans, sans-serif"
-    fontSize: "23px"
-    fontWeight: 600
-    lineHeight: 1.25
-    letterSpacing: "-.04em"
+    fontSize: "33px"
+    fontWeight: 500
+    lineHeight: 1.05
+    letterSpacing: "-.025em"
   title:
     fontFamily: "DM Sans, sans-serif"
-    fontSize: "18px"
+    fontSize: "23px"
     fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "-.025em"
   body:
     fontFamily: "DM Sans, sans-serif"
-    fontSize: "12px"
-    lineHeight: 1.8
+    fontSize: "13px"
+    lineHeight: 1.7
   label:
     fontFamily: "DM Sans, sans-serif"
     fontSize: "12px"
@@ -55,7 +55,7 @@ rounded:
   button: "7px"
   compact: "8px"
   indicator: "10px"
-  sheet: "16px"
+  sheet: "24px"
 spacing:
   compact: "8px"
   control: "12px"
@@ -95,9 +95,9 @@ components:
 
 ## Overview
 
-**Creative North Star: "The mountain hideaway inspection sheet"**
+**Creative North Star: "The mountain hideaway field report"**
 
-The approved raccoon identity and supplied mountain/cave illustration frame a quiet cream inspection sheet. Charcoal surroundings separate the brand introduction from the compact, readable findings. The illustration remains a single flattened plane; paper and typography stay still.
+The approved raccoon identity and supplied mountain/cave illustration frame a confident cream field report. A deep forest utility header separates navigation from the evidence surface, while larger editorial type and generous rows make the review readable at a glance. The illustration remains a single flattened plane; paper and typography stay still.
 
 This record describes the implemented responsive interface preview. Findings are prepared synthetic fixtures, and the visible preview labels preserve that boundary. No live AI, merchant page capture or real merchant autofill is represented as delivered.
 
@@ -105,7 +105,7 @@ This record describes the implemented responsive interface preview. Findings are
 
 - Raccoon identity and supplied mountain/cave artwork.
 - Cream paper, charcoal surroundings and forest actions.
-- Compact findings, visible evidence and explicit status text.
+- Spacious findings, visible evidence and explicit status text.
 - Stationary reading surface with optional background motion.
 
 ## Colors
@@ -139,7 +139,7 @@ The brand-side display uses a soft serif; findings and controls use compact sans
 
 ## Layout
 
-The page shell has maximum width (1400px) and desktop padding (36px 58px 24px). The desktop grid combines a flexible introduction of at least (260px) with a sheet of at most (620px), separated by (60px). The introduction is sticky at (90px); the grid starts (48px) below the header.
+The page shell has maximum width (1540px) and desktop padding (28px 46px 30px). The desktop grid combines a brand introduction up to (390px) with a report workspace up to (820px), separated by a responsive gap. The introduction is sticky at (30px); the grid starts (44px) below the header.
 
 At 1500px and above, grid top spacing becomes (64px). At 1100px and below, page padding is (28px 32px 22px), grid gap is (32px), the introduction minimum is (225px), and the sheet column maximum is (570px). Sheet horizontal insets become (23px).
 
@@ -151,7 +151,7 @@ Dialogs use width `min(480px, calc(100% - 32px))` and maximum height `calc(100dv
 
 The supplied JPG is displayed through an SVG viewport (`0 0 5000 2000`) against its source dimensions (8502 by 2000), excluding the explanatory region. A gradient shade supplies the dark reading backdrop; at 850px and below it becomes `rgba(24,29,30,.69)`.
 
-- **Sheet:** `0 20px 65px #0c141140`.
+- **Sheet:** `0 34px 90px #050c0975`.
 - **Dialog:** `0 22px 80px #0b120d66`; backdrop `#172019ab`.
 - **Toast:** `0 8px 40px #0b17194d`.
 
@@ -205,3 +205,8 @@ The indicator has a muted gradient track and explicit labels; unknown data repla
 - Don't imply live AI analysis, refreshed merchant terms or real submissions in this fixture preview.
 
 Not canonized: the 11px mobile tabs and 10px count badge are recorded as observed compact exceptions, not a new body-copy scale. Runtime contrast and rendered font appearance require the parent verification evidence; source inspection alone does not establish them.
+# Current UI revision — 9 October 2026
+
+This revision supersedes rounded-card, marketing-aside and warning-gauge guidance below. The interface is a centered, square-edged review workspace with concise functional copy. Preserve the raccoon identity and cave artwork; blur only the backdrop by 6px behind an opaque cream reading surface. Controls, dialogs and panels use zero corner radius.
+
+The review gauge now means **effort to claim**, never scam likelihood or safety. Use the explicit sourced factors in `demo-data.ts` and the rubric in `review-rules.mjs`: one point per step, two for an in-person visit, one each for purchase, cancellation and eligibility restriction. Easy is 0–2, Moderate 3–5, Hard 6+. Incomplete coverage produces an unknown result with no selected segment. Keep contradictory terms as separate warnings. This is a sample-data heuristic, not live AI or personalized difficulty.
