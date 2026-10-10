@@ -71,6 +71,7 @@ export interface ScanResult {
     domainList?: 'trusted' | 'blocked';
   };
   aiUsed: boolean;
+  aiModel?: string;
   aiNote?: string;
   durationMs: number;
   capturedAt: string;

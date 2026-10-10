@@ -8,11 +8,11 @@ export default function AboutSection() {
       <div className="adm-section-body">
         <p><strong>RaccTion v{version}</strong> — scan a promo page and see what it really asks for.</p>
 
-        <p><strong>What runs locally on this device:</strong> reading the page text and forms, the keyword checks, the Gemini Nano analysis, scoring, and all storage (settings, history, PIN hash). RaccTion sends nothing to any server.</p>
+        <p><strong>What runs locally on this device:</strong> reading page text and forms, keyword checks, Qwen3 0.6B inference through a CPU-only llama.cpp server, scoring, and storage. Page text goes only to the server on this same laptop; no cloud AI receives it.</p>
 
-        <p><strong>What needs internet:</strong> the one-time Gemini Nano download, which Chrome itself performs, and loading the websites you scan.</p>
+        <p><strong>What needs internet:</strong> the initial runtime and model downloads, and loading websites. Once installed, the local AI server can analyze saved demo pages offline.</p>
 
-        <p><strong>Why local?</strong> Promo pages are exactly where people get asked for card numbers, OTPs, IDs and e-wallet logins. Sending those pages — and your browsing — to a cloud AI to check them would leak the very information you&apos;re trying to protect. RaccTion reads the page and runs Gemini Nano on your own device: nothing is uploaded, there is no API key or account, it costs nothing per scan, and once the model is downloaded it keeps working offline.</p>
+        <p><strong>Why local?</strong> Promo pages can ask for card numbers, OTPs, IDs and e-wallet logins. Local inference keeps the captured page text on your device, needs no cloud account or API key, and works without internet after installation. The small model can make mistakes, so quotes are checked against page text and keyword checks remain active.</p>
 
         <p className="adm-help">Trust levels are signals, not a guarantee — always check the domain yourself.</p>
       </div>

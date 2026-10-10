@@ -2,10 +2,14 @@
 
 ## Models and inference
 
-- **Gemini Nano**, via Chrome's built-in **Prompt API** (`globalThis.LanguageModel`), runs entirely on the device. The model is downloaded and managed by Chrome — it is not bundled with the extension — and the exact model version can be inspected at `chrome://on-device-internals`.
-- Output is constrained to a small JSON schema (`responseConstraint`) and treated as data only; every AI quote is validated against the captured page text before it earns a "Required" label or a trust point.
-- When the Prompt API is missing or the model isn't available, RaccTion runs in **keyword-only mode** and says so on the card.
-- **Real-inference verification on the demo machine: pending.**
+- **Qwen3 0.6B Q8_0** runs on the user's CPU through a pinned Windows build of **llama.cpp**. The extension calls the OpenAI-compatible endpoint at `http://127.0.0.1:8081`; the server is bound to loopback only and its CORS allowlist is set to the exact installed extension origin.
+- Model: `Qwen/Qwen3-0.6B-GGUF`, file `Qwen3-0.6B-Q8_0.gguf`, pinned Hugging Face revision `23749fefcc72300e3a2ad315e1317431b06b590a`, SHA-256 `9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031`.
+- Runtime: `ggml-org/llama.cpp` release `b11429`, Windows CPU x64 archive, SHA-256 `1283323272b04cd07905816a597a0da810918102de958f4ff6f7bbaa70ed2efe`.
+- `scripts/start-local-ai.ps1` downloads these pinned artifacts only when verified local copies are unavailable. It checks exact file sizes and SHA-256 hashes before extraction or launch, then starts one CPU-only slot with two inference threads, a 4096-token context, the RAM prompt cache disabled, and model reasoning disabled.
+- AI output is requested as structured JSON and treated as untrusted data. Every quoted claim is validated against the captured page text before it earns a "Required" label or a trust point. Claims without a matching quote remain visibly marked as AI inference.
+- When the local server is unavailable, times out, or returns unreadable output, RaccTion finishes in **keyword-only mode** and says so on the card.
+- Qwen3 0.6B is a small model selected for modest hardware. Its output can be incomplete or wrong; deterministic rules, evidence validation, and the visible fallback reduce but do not eliminate that limitation.
+- **End-to-end extension inference verification on the demo machine: pending final verification.**
 
 ## Technologies and frameworks
 
@@ -13,11 +17,14 @@ From `package.json` at submission time:
 
 - React 19 / ReactDOM 19, Vite 8, TypeScript 5.9, Tailwind CSS 4 (@tailwindcss/vite), Framer Motion 12, lucide-react 1.53, clsx 2, tailwind-merge 3, @fontsource DM Sans 5 / Fraunces 5, @types/chrome 0.3, @types/node 22.
 - Chrome Extension APIs: `scripting` (on-demand injection), `storage` (settings/history in `storage.local`, live scan state in `storage.session`), `action` (badge), `runtime` (messages, options page), `tabs` (capture/highlight messaging).
-- Web platform: CSS Custom Highlight API (`::highlight(racction-hit)` + `CSS.highlights`) for "Show on page"; Web Crypto PBKDF2-SHA256 (150,000 iterations, 16-byte salt) for the optional Admin PIN; `structuredClone`, `AbortController` timeouts, `promptStreaming`.
+- Web platform: CSS Custom Highlight API (`::highlight(racction-hit)` + `CSS.highlights`) for "Show on page"; Web Crypto PBKDF2-SHA256 (150,000 iterations, 16-byte salt) for the optional Admin PIN; `structuredClone`, `AbortController` timeouts, and `fetch` to the loopback OpenAI-compatible endpoint.
+- Local inference runtime: llama.cpp `b11429` (`llama-server`) and Qwen3 0.6B Q8_0. The runtime and model are not committed to the repository.
 
 ## APIs and cloud services
 
-**None.** There is no backend, no analytics, no API key, no account. The only network fetch the extension itself ever triggers is Chrome's one-time Gemini Nano model download. Scanned page content never leaves the device.
+There is **no cloud inference service**, analytics service, API key, or model account. RaccTion does use a local HTTP backend: captured page text is sent from the extension to `127.0.0.1:8081` on the same device for inference. The server is not exposed on the LAN.
+
+Internet access is used to load websites and, on first setup, to download the pinned llama.cpp archive from GitHub Releases and the pinned model file from Hugging Face. Those downloads are performed by the user-run PowerShell launcher and verified before use. Scanned page content is not sent to GitHub, Hugging Face, or a cloud model API.
 
 ## Existing code and assets
 
@@ -30,7 +37,8 @@ From `package.json` at submission time:
 ## AI development tools
 
 - **Devin (Cognition)** — planning, implementation, and testing of the Chrome extension (this delivery).
-- The earlier interface preview used **OpenAI Codex** with **Impeccable** design guidance and an installed 21st CLI skill for component integration. These tools are separate from product inference; no paid 21st asset was retrieved.
+- **OpenAI Codex** — earlier interface work, plus assistance integrating the local Qwen3/llama.cpp provider, preparing the reproducible launcher and updating submission documentation. Codex is a development tool and is not used for product inference.
+- The earlier interface preview also used **Impeccable** design guidance and an installed 21st CLI skill for component integration. No paid 21st asset was retrieved.
 
 ## User data
 

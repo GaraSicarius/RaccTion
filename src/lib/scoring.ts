@@ -130,6 +130,7 @@ export function buildResult(args: {
   offerSummary: string;
   offerType: string;
   aiUsed: boolean;
+  aiModel?: string;
   aiNote?: string;
   durationMs: number;
   settings: Settings;
@@ -152,6 +153,7 @@ export function buildResult(args: {
     effort,
     trust,
     aiUsed: args.aiUsed,
+    ...(args.aiModel ? { aiModel: args.aiModel } : {}),
     ...(args.aiNote ? { aiNote: args.aiNote } : {}),
     durationMs: Math.round(args.durationMs),
     capturedAt: capture.capturedAt,

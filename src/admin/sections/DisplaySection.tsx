@@ -35,7 +35,7 @@ export default function DisplaySection({ settings, update }: { settings: Setting
       offerSummary: '',
       offerType: 'giveaway_prize',
       aiUsed: false,
-      aiNote: 'Gemini Nano isn\'t available on this device — keyword scan only.',
+      aiNote: 'Keyword scan preview — local model not used in this preview.',
       durationMs: 0,
       settings,
       signals,

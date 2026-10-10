@@ -1,4 +1,4 @@
-import { analyze, getAvailability, NanoError, type Availability } from '../ai/nano.ts';
+import { analyze, getAvailability, LocalModelError, MODEL_NAME, type Availability } from '../ai/local.ts';
 import type { AiAnalysis } from '../ai/prompt.ts';
 import { ruleScan } from '../lib/rules.ts';
 import { buildResult, mergeFindings, validatedAiFlags } from '../lib/scoring.ts';
@@ -10,8 +10,8 @@ chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === 'install') chrome.runtime.openOptionsPage();
 });
 
-const RUNNING_STALE_MS = 45_000;
-const AI_TIMEOUT_MS = 90_000;
+const RUNNING_STALE_MS = 200_000;
+const AI_TIMEOUT_MS = 180_000;
 const WRITE_THROTTLE_MS = 400;
 
 chrome.runtime.onMessage.addListener((msg: { type?: string; tabId?: number }, _sender, sendResponse) => {
@@ -44,7 +44,7 @@ function friendlyPageError(url: string): string {
 }
 
 function aiNoteFor(err: unknown): string {
-  if (err instanceof NanoError) {
+  if (err instanceof LocalModelError) {
     switch (err.code) {
       case 'timeout':
       case 'aborted':
@@ -52,7 +52,7 @@ function aiNoteFor(err: unknown): string {
       case 'parse':
         return 'AI response couldn\'t be read — showing keyword results.';
       default:
-        return 'Gemini Nano isn\'t available on this device — keyword scan only.';
+        return 'Local model is not available — showing keyword results.';
     }
   }
   return 'AI response couldn\'t be read — showing keyword results.';
@@ -170,9 +170,9 @@ async function runScan(tabId: number): Promise<void> {
     if (availability === 'available') {
       await write('ai', 0.35, { partial: rulesResult });
       const controller = new AbortController();
+      let timeout: ReturnType<typeof setTimeout> | undefined;
       try {
-        // Race the whole analysis: if any awaited Nano call (create/clone/stream)
-        // never settles, the scan still completes instead of stalling.
+        // Bound inference even if the local server stops responding.
         const outcome = await Promise.race([
           analyze(capture, settings, {
             signal: controller.signal,
@@ -180,7 +180,7 @@ async function runScan(tabId: number): Promise<void> {
               void write('ai', 0.35 + fraction * 0.55, { partial: rulesResult }, false);
             },
           }),
-          new Promise<'timeout'>(res => setTimeout(() => res('timeout'), AI_TIMEOUT_MS)),
+          new Promise<'timeout'>(res => { timeout = setTimeout(() => res('timeout'), AI_TIMEOUT_MS); }),
         ]);
         if (outcome === 'timeout') {
           controller.abort();
@@ -191,10 +191,12 @@ async function runScan(tabId: number): Promise<void> {
         }
       } catch (err) {
         ai = null;
-        aiNote = aiNoteFor(err instanceof DOMException && err.name === 'AbortError' ? new NanoError('timeout') : err);
+        aiNote = aiNoteFor(err instanceof DOMException && err.name === 'AbortError' ? new LocalModelError('timeout') : err);
+      } finally {
+        if (timeout) clearTimeout(timeout);
       }
     } else {
-      aiNote = 'Gemini Nano isn\'t available on this device — keyword scan only.';
+      aiNote = 'Local model is not running — keyword scan only. Start the local AI server from Admin.';
     }
 
     // -- scoring -------------------------------------------------------------
@@ -208,10 +210,12 @@ async function runScan(tabId: number): Promise<void> {
       findings: merged,
       steps: ai?.steps ?? [],
       costs: ai?.costs ?? { upfront: null, recurring: null, minimumSpend: null },
-      freePlan: ai?.freePlan ?? (freePlanFound ? 'yes' : 'unclear'),
+      // A small model's unsupported "free" claim must not reassure the user.
+      freePlan: freePlanFound ? 'yes' : ai?.freePlan === 'yes' ? 'unclear' : ai?.freePlan ?? 'unclear',
       offerSummary: ai?.offerSummary ?? '',
       offerType: ai?.offerType ?? 'other',
       aiUsed: ai !== null,
+      aiModel: ai !== null ? MODEL_NAME : undefined,
       aiNote: ai === null ? aiNote : undefined,
       durationMs: Date.now() - startedAt,
       settings,

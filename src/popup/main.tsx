@@ -2,29 +2,20 @@ import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import '../index.css';
 import './popup.css';
-import { CircleAlert, Download, Globe, LoaderCircle, ScanLine, Settings, ShieldCheck } from 'lucide-react';
+import { CircleAlert, Globe, LoaderCircle, ScanLine, Settings, ShieldCheck } from 'lucide-react';
 import { Raccoon } from '../components/Raccoon.tsx';
-import type { Availability } from '../ai/nano.ts';
+import type { Availability } from '../ai/local.ts';
 
 const RESTRICTED = /^(chrome|edge|about|view-source|devtools|chrome-extension|moz-extension|brave|vivaldi|opera):|chromewebstore\.google\.com|microsoftedge\.microsoft\.com|addons\.opera\.com/;
 
 function statusLine(status: Availability | null): { cls: string; text: React.ReactNode; icon: React.ReactNode } {
   switch (status) {
     case 'available':
-      return { cls: 'pop-status--ready', text: 'Ready — Gemini Nano is on this device.', icon: <ShieldCheck size={15} /> };
-    case 'downloadable':
-      return {
-        cls: 'pop-status--warn',
-        text: <>Needs a one-time download — <a href="#" onClick={e => { e.preventDefault(); void chrome.runtime.openOptionsPage(); }}>open Admin</a>.</>,
-        icon: <Download size={15} />,
-      };
-    case 'downloading':
-      return { cls: 'pop-status--warn', text: 'Downloading Gemini Nano…', icon: <LoaderCircle size={15} className="spin" /> };
-    case 'no-api':
+      return { cls: 'pop-status--ready', text: 'Ready — Qwen3 0.6B is running locally.', icon: <ShieldCheck size={15} /> };
     case 'unavailable':
-      return { cls: 'pop-status--warn', text: 'Not supported on this device — keyword scan only.', icon: <CircleAlert size={15} /> };
+      return { cls: 'pop-status--warn', text: 'Start the local AI server — open Admin for setup. Keyword scans still work.', icon: <CircleAlert size={15} /> };
     default:
-      return { cls: '', text: 'Checking Gemini Nano…', icon: <LoaderCircle size={15} className="spin" /> };
+      return { cls: '', text: 'Checking local AI…', icon: <LoaderCircle size={15} className="spin" /> };
   }
 }
 

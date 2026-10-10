@@ -2,11 +2,12 @@
   "manifest_version": 3,
   "name": "RaccTion",
   "version": "1.0.0",
-  "description": "Scan a promo page and see what it really asks for — analyzed on your device by Gemini Nano.",
+  "description": "Scan a promo page and see what it really asks for — analyzed on your device by Qwen3 0.6B.",
   "action": { "default_popup": "popup.html" },
   "options_page": "admin.html",
   "background": { "service_worker": "background.js", "type": "module" },
   "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://127.0.0.1:8081/*"],
   "web_accessible_resources": [
     { "resources": ["overlay.html", "assets/*"], "matches": ["<all_urls>"] }
   ],

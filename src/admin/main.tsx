@@ -9,7 +9,7 @@ import { mergeSettings } from '../lib/settings.ts';
 import { getPinRecord, getProfileEnc, getSettings, isAdminUnlocked, saveSettings, setAdminUnlocked, setProfile } from '../lib/storage.ts';
 import { decryptProfile } from '../lib/profileCrypto.ts';
 import { verifyPin } from '../lib/pin.ts';
-import { getAvailability, type Availability } from '../ai/nano.ts';
+import { getAvailability, type Availability } from '../ai/local.ts';
 import { STATUS_TEXT } from './statusText.ts';
 import type { Settings } from '../lib/types.ts';
 import ModelSection from './sections/ModelSection.tsx';

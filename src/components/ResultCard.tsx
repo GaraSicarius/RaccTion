@@ -20,11 +20,11 @@ const STATUS_LABELS: Record<Exclude<Finding['status'], 'not_found'>, string> = {
 const STAGES: { id: ScanState['stage']; label: string }[] = [
   { id: 'reading', label: 'Reading the page' },
   { id: 'rules', label: 'Checking forms & fine print' },
-  { id: 'ai', label: 'Asking Gemini Nano (on this device)' },
+  { id: 'ai', label: 'Asking Qwen3 0.6B (on this device)' },
   { id: 'scoring', label: 'Scoring' },
 ];
 
-const STALE_MS = 45_000;
+const STALE_MS = 200_000;
 
 const EFFORT_LABELS: Record<ScanResult['effort']['level'], string> = {
   easy: 'Easy',
@@ -479,7 +479,7 @@ export default function ResultCard({ state, settings, tabId, onRescan, onAdmin, 
         <p className="rc-footer-note">
           <ShieldCheck size={13} />
           <span>{result.aiUsed
-            ? `Analyzed on this device by Gemini Nano · nothing sent · ${(result.durationMs / 1000).toFixed(1)}s`
+            ? `Analyzed on this device by ${result.aiModel ?? 'Gemini Nano'} · no cloud AI · ${(result.durationMs / 1000).toFixed(1)}s`
             : (result.aiNote ?? 'Keyword scan only · nothing sent')}</span>
         </p>
         <div className="rc-actions">
