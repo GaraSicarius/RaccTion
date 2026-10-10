@@ -20,11 +20,11 @@ const STATUS_LABELS: Record<Exclude<Finding['status'], 'not_found'>, string> = {
 const STAGES: { id: ScanState['stage']; label: string }[] = [
   { id: 'reading', label: 'Reading the page' },
   { id: 'rules', label: 'Checking forms & fine print' },
-  { id: 'ai', label: 'Asking Qwen3 0.6B (on this device)' },
+  { id: 'ai', label: 'Asking Gemini Nano (on this device)' },
   { id: 'scoring', label: 'Scoring' },
 ];
 
-const STALE_MS = 260_000;
+const STALE_MS = 45_000;
 
 const EFFORT_LABELS: Record<ScanResult['effort']['level'], string> = {
   easy: 'Easy',
@@ -355,8 +355,8 @@ export default function ResultCard({ state, settings, tabId, onRescan, onAdmin, 
             <h2 className="rc-title">{result.aiUsed && result.offerSummary ? result.offerSummary : result.title || result.hostname}</h2>
             {!result.aiUsed && (
               <p className="rc-summary">
-                {result.aiNote?.includes('Local model is not running')
-                  ? 'Keyword scan only — the local AI server isn\'t running.'
+                {result.aiNote?.includes("Gemini Nano isn't available")
+                  ? 'Keyword scan only — no AI on this device.'
                   : `Keyword scan only${result.aiNote ? ` — ${result.aiNote}` : '.'}`}
               </p>
             )}

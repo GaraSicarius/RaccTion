@@ -1,5 +1,4 @@
 node_modules/
-.local-ai/
 dist/
 *.tsbuildinfo
 .impeccable/review/

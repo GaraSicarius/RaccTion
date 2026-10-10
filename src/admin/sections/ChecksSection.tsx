@@ -94,7 +94,7 @@ function CheckRow({ cat, update }: { cat: CategoryDef; update: (fn: (draft: Sett
           </span>
         </div>
         <div>
-          <span className="adm-hint" style={{ display: 'block', marginBottom: 4 }}>Description — tells the local model what this check means.</span>
+          <span className="adm-hint" style={{ display: 'block', marginBottom: 4 }}>Description — sent to Gemini Nano as this check&apos;s meaning.</span>
           <textarea value={cat.description} aria-label={`${cat.label} description`}
             onChange={e => patch(c => { c.description = e.target.value.slice(0, 240); })} />
         </div>
@@ -155,7 +155,7 @@ function AddCheckForm({ settings, update }: { settings: Settings; update: (fn: (
           </label>
         </div>
         <div>
-          <span className="adm-hint" style={{ display: 'block', marginBottom: 4 }}>Description — tells the local model what this check means.</span>
+          <span className="adm-hint" style={{ display: 'block', marginBottom: 4 }}>Description — sent to Gemini Nano so it knows what this check means.</span>
           <textarea value={description} maxLength={240} onChange={e => setDescription(e.target.value)} placeholder="What the page asks for, e.g. payment in crypto." />
         </div>
         <div>

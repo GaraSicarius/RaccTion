@@ -1,4 +1,4 @@
-import { analyze, getAvailability, LocalModelError, MODEL_NAME, type Availability } from '../ai/local.ts';
+import { analyze, getAvailability, NanoError, type Availability } from '../ai/nano.ts';
 import type { AiAnalysis } from '../ai/prompt.ts';
 import { ruleScan } from '../lib/rules.ts';
 import { buildResult, mergeFindings, validatedAiFlags } from '../lib/scoring.ts';
@@ -10,9 +10,8 @@ chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === 'install') chrome.runtime.openOptionsPage();
 });
 
-const RUNNING_STALE_MS = 260_000;
-const AI_TIMEOUT_MS = 240_000;
-const KEEPALIVE_MS = 20_000;
+const RUNNING_STALE_MS = 45_000;
+const AI_TIMEOUT_MS = 90_000;
 const WRITE_THROTTLE_MS = 400;
 
 chrome.runtime.onMessage.addListener((msg: { type?: string; tabId?: number }, _sender, sendResponse) => {
@@ -45,7 +44,7 @@ function friendlyPageError(url: string): string {
 }
 
 function aiNoteFor(err: unknown): string {
-  if (err instanceof LocalModelError) {
+  if (err instanceof NanoError) {
     switch (err.code) {
       case 'timeout':
       case 'aborted':
@@ -53,7 +52,7 @@ function aiNoteFor(err: unknown): string {
       case 'parse':
         return 'AI response couldn\'t be read — showing keyword results.';
       default:
-        return 'Local model is not available — showing keyword results.';
+        return 'Gemini Nano isn\'t available on this device — keyword scan only.';
     }
   }
   return 'AI response couldn\'t be read — showing keyword results.';
@@ -171,12 +170,9 @@ async function runScan(tabId: number): Promise<void> {
     if (availability === 'available') {
       await write('ai', 0.35, { partial: rulesResult });
       const controller = new AbortController();
-      let timeout: ReturnType<typeof setTimeout> | undefined;
-      // A pending fetch doesn't count as activity, so the browser may suspend the
-      // worker mid-inference; calling an extension API resets its idle timer.
-      const keepalive = setInterval(() => { void chrome.runtime.getPlatformInfo?.().catch(() => {}); }, KEEPALIVE_MS);
       try {
-        // Bound inference even if the local server stops responding.
+        // Race the whole analysis: if any awaited Nano call (create/clone/stream)
+        // never settles, the scan still completes instead of stalling.
         const outcome = await Promise.race([
           analyze(capture, settings, {
             signal: controller.signal,
@@ -184,7 +180,7 @@ async function runScan(tabId: number): Promise<void> {
               void write('ai', 0.35 + fraction * 0.55, { partial: rulesResult }, false);
             },
           }),
-          new Promise<'timeout'>(res => { timeout = setTimeout(() => res('timeout'), AI_TIMEOUT_MS); }),
+          new Promise<'timeout'>(res => setTimeout(() => res('timeout'), AI_TIMEOUT_MS)),
         ]);
         if (outcome === 'timeout') {
           controller.abort();
@@ -195,13 +191,10 @@ async function runScan(tabId: number): Promise<void> {
         }
       } catch (err) {
         ai = null;
-        aiNote = aiNoteFor(err instanceof DOMException && err.name === 'AbortError' ? new LocalModelError('timeout') : err);
-      } finally {
-        if (timeout) clearTimeout(timeout);
-        clearInterval(keepalive);
+        aiNote = aiNoteFor(err instanceof DOMException && err.name === 'AbortError' ? new NanoError('timeout') : err);
       }
     } else {
-      aiNote = 'Local model is not running — keyword scan only. Start the local AI server from Admin.';
+      aiNote = 'Gemini Nano isn\'t available on this device — keyword scan only.';
     }
 
     // -- scoring -------------------------------------------------------------
@@ -215,12 +208,10 @@ async function runScan(tabId: number): Promise<void> {
       findings: merged,
       steps: ai?.steps ?? [],
       costs: ai?.costs ?? { upfront: null, recurring: null, minimumSpend: null },
-      // A small model's unsupported "free" claim must not reassure the user.
-      freePlan: freePlanFound ? 'yes' : ai?.freePlan === 'yes' ? 'unclear' : ai?.freePlan ?? 'unclear',
+      freePlan: ai?.freePlan ?? (freePlanFound ? 'yes' : 'unclear'),
       offerSummary: ai?.offerSummary ?? '',
       offerType: ai?.offerType ?? 'other',
       aiUsed: ai !== null,
-      aiModel: ai !== null ? MODEL_NAME : undefined,
       aiNote: ai === null ? aiNote : undefined,
       durationMs: Date.now() - startedAt,
       settings,
