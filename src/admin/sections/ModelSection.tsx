@@ -39,7 +39,7 @@ export default function ModelSection({ availability, onAvailabilityChange }: { a
           {availability && <span className={`adm-status adm-status--${availability}`}>{STATUS_TEXT[availability]}</span>}
           <span className="adm-status">CPU · local model</span>
         </div>
-        <p className="adm-help" style={{ marginTop: 10 }}>Keep the local AI server running while scanning. Initial setup needs internet; inference does not. Scans may take up to three minutes on a small CPU.</p>
+        <p className="adm-help" style={{ marginTop: 10 }}>Keep the local AI server running while scanning. Initial setup needs internet; inference does not. Scans may take up to four minutes on a small CPU.</p>
         {availability !== 'available' && (
           <div className="adm-test-out">
             <p>From the project folder, start the included local server:</p>

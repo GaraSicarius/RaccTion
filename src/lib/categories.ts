@@ -1,7 +1,7 @@
 import type { CategoryDef } from './types.ts';
 
 // Built-in checks. Keywords are English plus Filipino/Taglish terms common on
-// PH promo pages (Gemini Nano only supports EN output reliably, so the keyword
+// PH promo pages (the small local model only handles EN output reliably, so the keyword
 // rules carry the Tagalog coverage).
 export const BUILTIN_CATEGORIES: CategoryDef[] = [
   {

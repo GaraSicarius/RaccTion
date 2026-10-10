@@ -24,6 +24,7 @@ npm run demo    # vite serves demo-pages/ on 127.0.0.1 (port 5174, or next free)
 
 ## Gotchas
 
-- Opera GX is Chromium 136 → `minimum_chrome_version` must stay ≤136 (currently `"120"`). Opera/Edge have no `LanguageModel`; keyword-only mode is the expected path there.
+- Opera GX is Chromium 136 → `minimum_chrome_version` must stay ≤136 (currently `"120"`).
 - Restricted-page check (background + popup regexes) covers `chrome:`, `edge:`, `opera:`, web stores, and `file:` without access.
-- Gemini Nano download can only start from a user gesture on an extension page (Admin), never from the service worker.
+- Local AI: Qwen3 0.6B via llama.cpp `llama-server` on `127.0.0.1:8081` (client in `src/ai/local.ts`, launcher `scripts/start-local-ai.ps1 -ExtensionId <id>`). Model/runtime live in `.local-ai/` (gitignored) or the sibling `..\local-ai\`. Never stop the user's running server. Without it, scans fall back to keyword-only.
+- `src/ai/nano.ts` is the old Gemini Nano client and is no longer imported.

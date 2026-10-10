@@ -4,7 +4,7 @@ import type { PageCapture, Settings } from '../lib/types.ts';
 const BASE_URL = 'http://127.0.0.1:8081';
 const MODEL_ID = 'qwen3-0.6b';
 const AVAILABILITY_TIMEOUT_MS = 3000;
-const ANALYSIS_TIMEOUT_MS = 180_000;
+const ANALYSIS_TIMEOUT_MS = 240_000;
 const LOCAL_SYSTEM_SUFFIX = '\nFor local Qwen analysis: classify a prize that requires a fee as giveaway_prize. If any upfront payment is mandatory, freePlan must be "no".';
 
 export const MODEL_NAME = 'Qwen3 0.6B';

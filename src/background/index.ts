@@ -10,8 +10,9 @@ chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === 'install') chrome.runtime.openOptionsPage();
 });
 
-const RUNNING_STALE_MS = 200_000;
-const AI_TIMEOUT_MS = 180_000;
+const RUNNING_STALE_MS = 260_000;
+const AI_TIMEOUT_MS = 240_000;
+const KEEPALIVE_MS = 20_000;
 const WRITE_THROTTLE_MS = 400;
 
 chrome.runtime.onMessage.addListener((msg: { type?: string; tabId?: number }, _sender, sendResponse) => {
@@ -171,6 +172,9 @@ async function runScan(tabId: number): Promise<void> {
       await write('ai', 0.35, { partial: rulesResult });
       const controller = new AbortController();
       let timeout: ReturnType<typeof setTimeout> | undefined;
+      // A pending fetch doesn't count as activity, so the browser may suspend the
+      // worker mid-inference; calling an extension API resets its idle timer.
+      const keepalive = setInterval(() => { void chrome.runtime.getPlatformInfo?.().catch(() => {}); }, KEEPALIVE_MS);
       try {
         // Bound inference even if the local server stops responding.
         const outcome = await Promise.race([
@@ -194,6 +198,7 @@ async function runScan(tabId: number): Promise<void> {
         aiNote = aiNoteFor(err instanceof DOMException && err.name === 'AbortError' ? new LocalModelError('timeout') : err);
       } finally {
         if (timeout) clearTimeout(timeout);
+        clearInterval(keepalive);
       }
     } else {
       aiNote = 'Local model is not running — keyword scan only. Start the local AI server from Admin.';

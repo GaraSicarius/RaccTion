@@ -9,7 +9,7 @@
 - AI output is requested as structured JSON and treated as untrusted data. Every quoted claim is validated against the captured page text before it earns a "Required" label or a trust point. Claims without a matching quote remain visibly marked as AI inference.
 - When the local server is unavailable, times out, or returns unreadable output, RaccTion finishes in **keyword-only mode** and says so on the card.
 - Qwen3 0.6B is a small model selected for modest hardware. Its output can be incomplete or wrong; deterministic rules, evidence validation, and the visible fallback reduce but do not eliminate that limitation.
-- **End-to-end extension inference verification on the demo machine: pending final verification.**
+- **End-to-end extension inference verified on the development laptop:** a real scan of the synthetic prize demo page in Edge 155 completed with `aiUsed: true` and `aiModel: "Qwen3 0.6B"` in about 131 s on 2 CPU threads. See VERIFICATION.md.
 
 ## Technologies and frameworks
 
